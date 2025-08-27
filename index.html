@@ -1,4 +1,13 @@
+Here’s the full single‑file “Tanzania Safari Calculator” with:
+- Auto transit detection when park changes (per day)
+- Transit can be toggled manually; an “Auto” button re-applies detection for that day
+- Park entry fee is manual per day (you must tick it)
+- Mobile-friendly UI and dark/light icon toggle
+- Totals and per‑person price, Save/Load to localStorage
 
+Save as index.html and open in any browser.
+
+```html
 <!doctype html>
 <html lang="en">
 <head>
@@ -31,7 +40,6 @@ body{margin:0;background:linear-gradient(180deg,var(--bg),var(--bg2));color:var(
 .hgroup{min-width:0}
 .hgroup h1{font-size:20px;margin:0;white-space:nowrap;overflow:hidden;text-overflow:ellipsis}
 .hgroup .sub{color:var(--muted);font-size:12px;margin-top:2px;white-space:nowrap;overflow:hidden;text-overflow:ellipsis}
-
 .icon-btn{
   margin-left:auto;display:inline-flex;align-items:center;justify-content:center;gap:8px;
   width:40px;height:40px;border-radius:999px;border:1px solid #253041;background:#0b1324;color:#e5e7eb;
@@ -39,7 +47,6 @@ body{margin:0;background:linear-gradient(180deg,var(--bg),var(--bg2));color:var(
 }
 .icon-btn:hover{filter:brightness(1.05)} .icon-btn:active{transform:translateY(1px)}
 .icon{width:20px;height:20px;display:block}
-
 .wrap{max-width:1200px;margin:14px auto;padding:0 16px}
 .grid{display:grid;grid-template-columns:1fr 420px;gap:16px}
 .card{background:linear-gradient(180deg,rgba(255,255,255,.02),rgba(255,255,255,.01));border:1px solid var(--line);border-radius:14px;box-shadow:var(--shadow)}
@@ -50,7 +57,7 @@ h3{margin:0 0 12px;font-size:16px}
 label{display:block;font-size:12px;color:var(--muted);margin:0 0 6px}
 input[type=number],input[type=text],select{
   width:100%;padding:12px;border-radius:10px;border:1px solid var(--line);
-  background:#0b1324;color:var(--ink);outline:0;transition:border-color .15s, box-shadow .15s
+  background:#0b1324;color:#e5e7eb;outline:0;transition:border-color .15s, box-shadow .15s
 }
 input:focus,select:focus{border-color:#22d3ee;box-shadow:0 0 0 4px rgba(34,211,238,.15)}
 .btn{
@@ -64,7 +71,7 @@ input:focus,select:focus{border-color:#22d3ee;box-shadow:0 0 0 4px rgba(34,211,2
 .btn-danger{border-color:#7f1d1d;background:linear-gradient(180deg,#7f1d1d,#4c1212);color:#fee2e2}
 .day{border:1px dashed #2a3446;border-radius:12px;padding:12px;margin-bottom:12px;background:linear-gradient(180deg,rgba(255,255,255,.02),rgba(255,255,255,.01))}
 .day-head{display:flex;align-items:center;justify-content:space-between;margin-bottom:8px}
-.chip{display:inline-block;padding:4px 8px;border-radius:999px;font-size:12px;border:1px solid var(--chip-b);background:var(--chip);color:#a7f3d0}
+.chip{display:inline-block;padding:4px 8px;border-radius:999px;font-size:12px;border:1px solid var(--chip-b);background:#0c2530;color:#a7f3d0}
 .kv{display:flex;justify-content:space-between;gap:12px;padding:8px 0;border-bottom:1px dashed #273244}
 .kv:last-child{border-bottom:0}
 .total{font-size:18px;font-weight:800}
@@ -73,24 +80,17 @@ hr.sep{height:1px;border:0;background:#212b3c;margin:14px 0}
 .list{width:100%;padding:10px;border-radius:10px;border:1px solid #253041;background:#0b1324;color:#e5e7eb;height:160px}
 .summaryBig{display:flex;flex-direction:column;gap:8px;margin-top:8px}
 .summaryBig .line{display:flex;justify-content:space-between;font-size:18px;font-weight:800}
-
-/* Light theme (mobile readability: larger sizes, higher contrast) */
+/* Light theme */
 :root[data-theme="light"]{
   --bg:#f7f9fc; --bg2:#ffffff; --ink:#0b1324; --muted:#475569; --line:#d9e1ea; --card:#ffffff; --accent:#0ea5a0; --accent-ink:#003b38;
-  --chip:#eef6f6; --chip-b:#cfe8e6;
 }
 :root[data-theme="light"] body{background:linear-gradient(180deg,var(--bg),var(--bg2));color:var(--ink)}
 :root[data-theme="light"] .header{background:linear-gradient(180deg,rgba(255,255,255,.85),rgba(255,255,255,.7));border-bottom:1px solid #e8eef5}
-:root[data-theme="light"] .hgroup h1{font-size:22px}
-:root[data-theme="light"] .hgroup .sub{font-size:13px;color:#516070}
 :root[data-theme="light"] .card{background:#ffffff;border:1px solid var(--line);box-shadow:0 10px 24px rgba(15,23,42,.06)}
-:root[data-theme="light"] input[type=number], :root[data-theme="light"] input[type=text], :root[data-theme="light"] select{
-  background:#ffffff;border:1px solid var(--line);color:var(--ink)
-}
+:root[data-theme="light"] input[type=number], :root[data-theme="light"] input[type=text], :root[data-theme="light"] select{background:#ffffff;border:1px solid var(--line);color:#0b1324}
 :root[data-theme="light"] .btn-ghost{background:#f1f5f9;border-color:#d9e1ea;color:#0b1324}
 :root[data-theme="light"] .day{background:#ffffff;border-color:#e6edf3}
 :root[data-theme="light"] .kv{border-bottom:1px dashed #e4ebf2}
-
 /* Mobile tweaks */
 @media(max-width:980px){.grid{grid-template-columns:1fr}}
 @media(max-width:640px){
@@ -109,7 +109,7 @@ hr.sep{height:1px;border:0;background:#212b3c;margin:14px 0}
     <div class="logo" aria-hidden="true">TZ</div>
     <div class="hgroup">
       <h1>Tanzania Safari Calculator</h1>
-      <div class="sub">Plan days, flights, vehicles, concessions, extras — with per-person totals</div>
+      <div class="sub">Plan days, flights, vehicles, concessions, extras — with per‑person totals</div>
     </div>
     <button id="themeToggle" class="icon-btn" aria-label="Toggle theme" title="Toggle theme">
       <svg id="iconMoon" class="icon" viewBox="0 0 24 24" fill="currentColor" aria-hidden="true"><path d="M21 12.79A9 9 0 1 1 11.21 3a7 7 0 1 0 9.79 9.79z"/></svg>
@@ -161,7 +161,7 @@ hr.sep{height:1px;border:0;background:#212b3c;margin:14px 0}
             <button id="loadBtn" class="btn btn-ghost" type="button">Load Saved</button>
           </div>
         </div>
-        <div class="note" style="margin-top:6px">Concession applies when “Sleep in park” or “Inside park accommodation” is selected.</div>
+        <div class="note" style="margin-top:6px">- Transit auto-detects when park changes (you can toggle it or press Auto). - Park entry is manual (tick to include).</div>
       </div>
     </div>
 
@@ -265,6 +265,8 @@ function renderDays(){
   daysEl.value=count;
   daysContainer.innerHTML='';
   for(let i=0;i<count;i++) daysContainer.appendChild(createDayBlock(i));
+  // initial auto-detect transit across parks after blocks exist
+  autoDetectAllTransit();
 }
 
 function createDayBlock(idx){
@@ -319,8 +321,18 @@ function createDayBlock(idx){
     </div>
 
     <div class="row">
+      <div style="flex:1;display:flex;align-items:center;gap:8px">
+        <label style="display:flex;align-items:center;gap:8px;margin:0">
+          <input type="checkbox" class="transitBox" aria-label="Transit fee ${idx+1}"> Transit (auto)
+        </label>
+        <button type="button" class="btn btn-ghost autoTransitBtn" aria-label="Auto transit for day ${idx+1}" title="Auto transit">Auto</button>
+      </div>
       <label style="flex:1"><input type="checkbox" class="vehEntryBox" aria-label="Park vehicle entry ${idx+1}"> Park vehicle entry (if defined)</label>
+    </div>
+
+    <div class="row">
       <label style="flex:1"><input type="checkbox" class="matBox" aria-label="Materuni ${idx+1}"> Materuni (${money(matPrice)}/person)</label>
+      <label style="flex:1"><input type="checkbox" class="parkFeeBox" aria-label="Park entry fee ${idx+1}"> Park entry fee (manual)</label>
     </div>
 
     <div class="row">
@@ -340,15 +352,50 @@ function createDayBlock(idx){
     const hasVeh=Array.isArray(parkCfg?.vehicleEntries) && parkCfg.vehicleEntries.length>0;
     vehEntryBox.disabled=!hasVeh; if(!hasVeh) vehEntryBox.checked=false;
   }
-  parkSelect.addEventListener('change',updateVehEntry);
+  parkSelect.addEventListener('change',()=>{
+    updateVehEntry();
+    autoDetectTransitForIndex(idx, /*force*/false);
+  });
   updateVehEntry();
+
+  // Transit manual override tracking
+  const transitBox=block.querySelector('.transitBox');
+  transitBox.addEventListener('change',()=>{ transitBox.dataset.manual = '1'; });
+
+  // Auto button for transit (recompute from neighbors)
+  const autoBtn=block.querySelector('.autoTransitBtn');
+  autoBtn.addEventListener('click',()=>{ autoDetectTransitForIndex(idx, /*force*/true); });
+
+  // Park fee is manual; no auto behavior
 
   return block;
 }
 
 renderDays();
 
-/* Collect and calculate */
+/* Auto-detect transit: set if park changes from previous day; user can override */
+function getDayPark(index){
+  const b=daysContainer.querySelectorAll('.day')[index];
+  if(!b) return null;
+  return b.querySelector('.parkSelect').value || null;
+}
+function autoDetectTransitForIndex(index, force){
+  const blocks=daysContainer.querySelectorAll('.day');
+  const b=blocks[index]; if(!b) return;
+  const transitBox=b.querySelector('.transitBox');
+  if(!force && transitBox.dataset.manual==='1') return; // respect manual override
+  const prevPark = index>0 ? getDayPark(index-1) : null;
+  const curPark = getDayPark(index);
+  const shouldTransit = !!(prevPark && curPark && prevPark !== curPark);
+  transitBox.checked = shouldTransit;
+  if(!force){ delete transitBox.dataset.manual; } // keep auto state
+}
+function autoDetectAllTransit(){
+  const blocks=daysContainer.querySelectorAll('.day');
+  blocks.forEach((_,i)=>autoDetectTransitForIndex(i,false));
+}
+
+/* Collect and calculate (park fee is manual; transit is checkbox) */
 function collect(){
   const blocks=[...daysContainer.querySelectorAll('.day')];
   return {
@@ -365,10 +412,12 @@ function collect(){
       camping: b.querySelector('.campBox').checked,
       vehicleEntry: b.querySelector('.vehEntryBox').checked,
       materuni: b.querySelector('.matBox').checked,
+      parkFee: b.querySelector('.parkFeeBox').checked,         // manual park fee
+      transit: b.querySelector('.transitBox').checked,         // auto-detected but user-togglable
       other_desc: b.querySelector('.otherDesc').value.trim(),
       other_val: parseFloat(b.querySelector('.otherVal').value||'0')||0
     })),
-    profitOverride: (document.getElementById('profitOverride').value||'').trim()
+    profitOverride: (profitOverrideEl.value||'').trim()
   };
 }
 
@@ -384,7 +433,7 @@ function calculate(){
   const profit=d.profitOverride!=='' ? Math.max(0,parseFloat(d.profitOverride)||0) : profitAuto;
 
   const totals={park_fees:0,transit:0,concession:0,accommodation:0,vehicle:0,vehicle_entries:0,flights:0,camping:0,materuni:0,other:0,profit};
-  const lines=[]; let prev=null;
+  const lines=[];
 
   d.daysData.forEach((day,idx)=>{
     let sum=0; const det=[];
@@ -394,14 +443,16 @@ function calculate(){
       const c=f[day.flightLeg]*people; sum+=c; totals.flights+=c; det.push(`Flight ${day.flightLeg} × ${people} = ${money(c)}`);
     }
 
-    if(pc?.entry){
+    // Park fee is manual
+    if(day.parkFee && pc?.entry){
       const e=pc.entry; const c=(e.adult||0)*d.adults+(e.child||0)*d.children; sum+=c; totals.park_fees+=c;
       det.push(`Park fee (${pk}) = ${money(c)} (${e.adult||0}/adult, ${e.child||0}/child)`);
     }
 
-    if(prev!==null && r.chargeTransitOnParkChange && pk!==prev && x.transitPerPerson){
+    // Transit from checkbox (auto suggested earlier)
+    if(day.transit){
       const t=x.transitPerPerson; const c=(t.adult||0)*d.adults+(t.child||0)*d.children; sum+=c; totals.transit+=c;
-      det.push(`Transit (${prev} → ${pk}) = ${money(c)}`);
+      det.push(`Transit = ${money(c)}`);
     }
 
     if(day.car && r.chargeVehiclePerDay){
@@ -422,7 +473,6 @@ function calculate(){
     if(day.other_val>0){ sum+=day.other_val; totals.other+=day.other_val; det.push(`${day.other_desc?escapeHtml(day.other_desc):'Other'} = ${money(day.other_val)}`); }
 
     lines.push({day:idx+1,park:pk,amount:sum,details:det});
-    prev=pk;
   });
 
   renderReceipt(lines,totals,people);
@@ -503,10 +553,12 @@ function applyState(state){
     b.querySelector('.campBox').checked=!!d.camping;
     b.querySelector('.vehEntryBox').checked=!!d.vehicleEntry;
     b.querySelector('.matBox').checked=!!d.materuni;
-    b.querySelector('.otherDesc').value=d.other_desc||'';
-    b.querySelector('.otherVal').value=d.other_val||0;
+    b.querySelector('.parkFeeBox').checked=!!d.parkFee;
+    const tBox=b.querySelector('.transitBox'); tBox.checked=!!d.transit; delete tBox.dataset.manual;
     b.querySelector('.parkSelect').dispatchEvent(new Event('change'));
   });
 }
 </script>
 </body>
+</html>
+```
