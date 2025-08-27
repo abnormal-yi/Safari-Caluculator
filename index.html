@@ -1,0 +1,466 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width,initial-scale=1">
+<title>Tanzania Safari Calculator • TZ Safari</title>
+<style>
+:root{
+  --bg:#0f172a;--bg2:#111827;--ink:#e5e7eb;--muted:#9ca3af;--line:#1f2937;--card:#0b1220;
+  --accent:#22d3ee;--accent-ink:#00151a;--chip:#0c2530;--chip-b:#1d3b46
+}
+*{box-sizing:border-box}
+body{margin:0;background:linear-gradient(180deg,var(--bg),var(--bg2));color:var(--ink);font-family:Inter,system-ui,Segoe UI,Roboto,Arial}
+.header{max-width:1200px;margin:20px auto 0;padding:0 16px}
+.brand{display:flex;align-items:center;gap:12px}
+.logo{
+  width:40px;height:40px;border-radius:12px;display:flex;align-items:center;justify-content:center;
+  background:conic-gradient(from 220deg,#22d3ee,#60a5fa,#a78bfa,#22d3ee);
+  color:#002228;font-weight:900;font-family:ui-monospace,Consolas,monospace;letter-spacing:.5px;
+  box-shadow:0 10px 40px rgba(34,211,238,.25)
+}
+.hgroup h1{font-size:22px;margin:0}
+.hgroup .sub{color:var(--muted);font-size:13px;margin-top:4px}
+.wrap{max-width:1200px;margin:12px auto;padding:0 16px}
+.grid{display:grid;grid-template-columns:1fr 420px;gap:16px}
+.card{background:linear-gradient(180deg,rgba(255,255,255,.02),rgba(255,255,255,.01));border:1px solid var(--line);border-radius:14px;box-shadow:0 6px 24px rgba(0,0,0,.25), inset 0 1px 0 rgba(255,255,255,.06)}
+.in{padding:16px}
+h3{margin:0 0 12px;font-size:16px}
+.row{display:flex;gap:12px;margin-bottom:12px}
+.row>*{flex:1}
+label{display:block;font-size:12px;color:var(--muted);margin:0 0 6px}
+input[type=number],input[type=text],select{
+  width:100%;padding:12px;border-radius:10px;border:1px solid var(--line);
+  background:#0b1324;color:var(--ink);outline:0;transition:border-color .15s, box-shadow .15s
+}
+input:focus,select:focus{border-color:#22d3ee;box-shadow:0 0 0 4px rgba(34,211,238,.15)}
+.btn{
+  display:inline-flex;align-items:center;gap:8px;padding:10px 14px;border-radius:999px;border:1px solid #1f3a4d;
+  background:linear-gradient(180deg,#0d2a38,#0b2431);color:#d1f5ff;font-weight:700;cursor:pointer;
+  transition:filter .15s,transform .05s;box-shadow:0 6px 18px rgba(3,105,161,.25), inset 0 1px 0 rgba(255,255,255,.06)
+}
+.btn:hover{filter:brightness(1.06)} .btn:active{transform:translateY(1px)}
+.btn-primary{border-color:#0aa5b8;background:linear-gradient(180deg,#0bc5d9,#0aa5b8);color:#002228}
+.btn-ghost{background:transparent;border-color:#253041;color:#cbd5e1}
+.btn-danger{border-color:#7f1d1d;background:linear-gradient(180deg,#7f1d1d,#4c1212);color:#fee2e2}
+.day{border:1px dashed #2a3446;border-radius:12px;padding:12px;margin-bottom:12px;background:linear-gradient(180deg,rgba(255,255,255,.02),rgba(255,255,255,.01))}
+.day-head{display:flex;align-items:center;justify-content:space-between;margin-bottom:8px}
+.chip{display:inline-block;padding:4px 8px;border-radius:999px;font-size:12px;border:1px solid var(--chip-b);background:var(--chip);color:#a7f3d0}
+.kv{display:flex;justify-content:space-between;gap:12px;padding:8px 0;border-bottom:1px dashed #273244}
+.kv:last-child{border-bottom:0}
+.total{font-size:18px;font-weight:800}
+.note{font-size:12px;color:#9aa4ad}
+hr.sep{height:1px;border:0;background:#212b3c;margin:14px 0}
+.list{width:100%;padding:10px;border-radius:10px;border:1px solid #253041;background:#0b1324;color:#e5e7eb;height:160px}
+.summaryBig{display:flex;flex-direction:column;gap:8px;margin-top:8px}
+.summaryBig .line{display:flex;justify-content:space-between;font-size:18px;font-weight:800}
+
+/* Light theme (improved readability: larger fonts, higher contrast, clearer borders) */
+:root[data-theme="light"]{
+  --bg:#f7f9fc; --bg2:#ffffff; --ink:#0b1324; --muted:#475569; --line:#d9e1ea; --card:#ffffff; --accent:#0ea5a0; --accent-ink:#003b38;
+  --chip:#eef6f6; --chip-b:#cfe8e6;
+}
+:root[data-theme="light"] body{background:linear-gradient(180deg,var(--bg),var(--bg2));color:var(--ink)}
+:root[data-theme="light"] .hgroup h1{font-size:24px}
+:root[data-theme="light"] .hgroup .sub{font-size:14px;color:#516070}
+:root[data-theme="light"] .card{background:#ffffff;border:1px solid var(--line);box-shadow:0 10px 24px rgba(15,23,42,.06)}
+:root[data-theme="light"] input[type=number], :root[data-theme="light"] input[type=text], :root[data-theme="light"] select{
+  background:#ffffff;border:1px solid var(--line);color:var(--ink)
+}
+:root[data-theme="light"] .btn-ghost{background:#f1f5f9;border-color:#d9e1ea;color:#0b1324}
+:root[data-theme="light"] .day{background:#ffffff;border-color:#e6edf3}
+:root[data-theme="light"] .kv{border-bottom:1px dashed #e4ebf2}
+@media(max-width:980px){.grid{grid-template-columns:1fr}}
+</style>
+</head>
+<body>
+<div class="header">
+  <div class="brand">
+    <div class="logo">TZ</div>
+    <div class="hgroup">
+      <h1>Tanzania Safari Calculator</h1>
+      <div class="sub">TZ Safari • Plan days, flights, vehicles, concessions, extras — with per-person totals</div>
+    </div>
+    <button id="themeToggle" class="btn btn-ghost" type="button" style="margin-left:auto">Toggle theme</button>
+  </div>
+</div>
+
+<div class="wrap">
+  <div class="grid">
+    <div class="card">
+      <div class="in">
+        <h3>Group & Trip</h3>
+        <div class="row">
+          <div><label>Adults</label><input id="adults" type="number" min="0" value="2"></div>
+          <div><label>Children</label><input id="children" type="number" min="0" value="0"></div>
+          <div>
+            <label>Days</label>
+            <div class="row" style="gap:8px">
+              <button id="decDays" class="btn-ghost btn" type="button" style="flex:0 0 64px">−</button>
+              <input id="days" type="number" min="1" max="60" value="5" style="text-align:center">
+              <button id="incDays" class="btn-ghost btn" type="button" style="flex:0 0 64px">+</button>
+            </div>
+          </div>
+        </div>
+
+        <div class="row">
+          <div><label>Profit (override)</label><input id="profitOverride" type="number" min="0" step="1" placeholder="Auto"></div>
+          <div><label>Auto profit rule</label><div class="note">1 pax $1000, 3 pax $1200, then +$200 per extra pax</div></div>
+        </div>
+
+        <hr class="sep">
+
+        <div style="display:flex;align-items:center;gap:8px;margin-bottom:8px">
+          <h3 style="margin:0">Day-by-day planner</h3>
+          <div style="margin-left:auto;display:flex;gap:8px">
+            <button id="addDay" class="btn btn-primary" type="button">+ Day</button>
+            <button id="removeDay" class="btn btn-ghost" type="button">− Day</button>
+          </div>
+        </div>
+
+        <div id="daysContainer"></div>
+
+        <div style="display:flex;gap:8px;align-items:center;margin-top:8px">
+          <button id="calcBtn" class="btn btn-primary" type="button">Calculate Receipt</button>
+          <button id="resetBtn" class="btn btn-ghost" type="button">Reset</button>
+          <div style="margin-left:auto;display:flex;gap:8px">
+            <button id="saveBtn" class="btn" type="button">Save Itinerary</button>
+            <button id="loadBtn" class="btn btn-ghost" type="button">Load Saved</button>
+          </div>
+        </div>
+        <div class="note" style="margin-top:6px">Concession applies when “Sleep in park” or “Inside park accommodation” is selected.</div>
+      </div>
+    </div>
+
+    <div class="card">
+      <div class="in">
+        <h3>Receipt & Breakdown</h3>
+        <div id="receiptEmpty" class="note">Click Calculate to see totals.</div>
+        <div id="receipt"></div>
+
+        <hr class="sep">
+        <h4 style="margin:0 0 8px">Saved itineraries</h4>
+        <div class="row" style="align-items:center">
+          <input id="saveName" type="text" placeholder="Name itinerary...">
+          <button id="doSave" class="btn" type="button">Save</button>
+        </div>
+        <select id="savedList" class="list" size="6"></select>
+        <div style="display:flex;gap:8px;margin-top:8px">
+          <button id="doLoad" class="btn" type="button">Load selected</button>
+          <button id="doDelete" class="btn btn-danger" type="button">Delete</button>
+          <button id="doClear" class="btn btn-ghost" type="button">Clear all</button>
+        </div>
+      </div>
+    </div>
+  </div>
+</div>
+
+<script>
+if(typeof String.prototype.replaceAll!=='function'){ String.prototype.replaceAll=function(a,b){ return this.split(a).join(b); } }
+function money(n){ return '$' + Number(n).toFixed(2); }
+function escapeHtml(s){ return String(s).replaceAll('&','&amp;').replaceAll('<','&lt;').replaceAll('>','&gt;').replaceAll('"','&quot;'); }
+
+/* Theme toggle */
+const THEME_KEY='tz_safari_theme';
+const themeToggleBtn=document.getElementById('themeToggle');
+function applyTheme(theme){ document.documentElement.setAttribute('data-theme',theme); themeToggleBtn.textContent = theme==='dark'?'Light mode':'Dark mode'; }
+function initTheme(){ let t=localStorage.getItem(THEME_KEY); if(!t){ t=window.matchMedia&&window.matchMedia('(prefers-color-scheme: light)').matches?'light':'dark'; } applyTheme(t); }
+themeToggleBtn.addEventListener('click',()=>{ const cur=document.documentElement.getAttribute('data-theme')||'dark'; const next=cur==='dark'?'light':'dark'; localStorage.setItem(THEME_KEY,next); applyTheme(next); });
+initTheme();
+
+/* Baked-in config for Tanzania (can be edited in code) */
+const CONFIG = {
+  rules: {
+    profit: { baseForOneOrTwo: 1000, forThree: 1200, plusPerExtra: 200 },
+    concessionAppliesIf: { sleepInPark: true, accommodationInsidePark: true },
+    chargeVehiclePerDay: true,
+    chargeTransitOnParkChange: true
+  },
+  parks: {
+    "Serengeti":   { entry: { adult: 83, child: 24 } },
+    "Ngorongoro":  { entry: { adult: 71, child: 24 }, vehicleEntries: [{ label: "Crater entry", amountPerVehicle: 295 }] },
+    "Tarangire":   { entry: { adult: 59, child: 18 } },
+    "LakeManyara": { entry: { adult: 59, child: 18 } },
+    "Arusha":      { entry: { adult: 59, child: 18 } }
+  },
+  flights: {
+    "Arusha - Kogatende":150,"Kogatende - Zanzibar":450,"Kogatende - Arusha":275,"Zanzibar/Dar - Kogatende":250,
+    "Seronera - Zanzibar":400,"Zanzibar - Seronera":250,"Seronera - Arusha":125,"Zanzibar - Arusha (morning)":100,
+    "Zanzibar - Arusha (afternoon/evening)":75,"Arusha - Zanzibar":190,"Arusha - Dar":190,"Dar - Arusha":100,"Arusha - Sero":125,"Mafia - Zanzibar":200
+  },
+  extras: {
+    perPerson: { "Camping": 36, "Accommodation": 200, "Materuni": 150 },
+    perVehicle: { "VehicleDay": 250 },
+    transitPerPerson: { adult: 71, child: 24 },
+    concessionPerPerson: { adult: 71, child: 24 }
+  }
+};
+
+/* DOM refs */
+const adultsEl=document.getElementById('adults');
+const childrenEl=document.getElementById('children');
+const daysEl=document.getElementById('days');
+const daysContainer=document.getElementById('daysContainer');
+const profitOverrideEl=document.getElementById('profitOverride');
+const receiptEl=document.getElementById('receipt');
+const receiptEmptyEl=document.getElementById('receiptEmpty');
+
+/* Build day UI */
+document.getElementById('addDay').onclick=()=>{ daysEl.value=Math.min(60,(parseInt(daysEl.value)||1)+1); renderDays(); };
+document.getElementById('removeDay').onclick=()=>{ daysEl.value=Math.max(1,(parseInt(daysEl.value)||1)-1); renderDays(); };
+document.getElementById('incDays').onclick=()=>{ daysEl.value=Math.min(60,(parseInt(daysEl.value)||1)+1); renderDays(); };
+document.getElementById('decDays').onclick=()=>{ daysEl.value=Math.max(1,(parseInt(daysEl.value)||1)-1); renderDays(); };
+daysEl.onchange=renderDays;
+document.getElementById('calcBtn').onclick=calculate;
+document.getElementById('resetBtn').onclick=()=>{ adultsEl.value=2; childrenEl.value=0; daysEl.value=5; profitOverrideEl.value=''; renderDays(); receiptEl.innerHTML=''; receiptEmptyEl.style.display='block'; };
+
+function renderDays(){
+  const count=Math.max(1,Math.min(60,parseInt(daysEl.value)||1));
+  daysEl.value=count;
+  daysContainer.innerHTML='';
+  for(let i=0;i<count;i++) daysContainer.appendChild(createDayBlock(i));
+}
+
+function createDayBlock(idx){
+  const block=document.createElement('div');
+  block.className='day';
+  const parks=Object.keys(CONFIG.parks);
+  const parkOpts=parks.map(p=>`<option value="${escapeHtml(p)}">${escapeHtml(p)}</option>`).join('');
+  const flightOpts=Object.entries(CONFIG.flights).map(([k,v])=>`<option value="${escapeHtml(k)}">${escapeHtml(k)} — ${money(v)}</option>`).join('');
+  const accPrice=CONFIG.extras.perPerson.Accommodation||0;
+  const campPrice=CONFIG.extras.perPerson.Camping||0;
+  const vehPrice=CONFIG.extras.perVehicle.VehicleDay||0;
+  const matPrice=CONFIG.extras.perPerson.Materuni||0;
+
+  block.innerHTML=`
+    <div class="day-head">
+      <strong>Day ${idx+1}</strong>
+      <span class="chip">Editable</span>
+    </div>
+
+    <div class="row">
+      <div>
+        <label>Park</label>
+        <select class="parkSelect">${parkOpts}</select>
+      </div>
+      <div style="align-self:flex-end">
+        <label style="display:flex;align-items:center;gap:8px">
+          <input type="checkbox" class="sleepBox"> Sleep in park
+        </label>
+      </div>
+    </div>
+
+    <div class="row">
+      <div style="flex:1.2">
+        <label style="display:flex;align-items:center;gap:8px">
+          <input type="checkbox" class="flightCheck"> Include flight
+        </label>
+      </div>
+      <div style="flex:2.8">
+        <label>Flight leg</label>
+        <select class="flightSelect" disabled>
+          <option value="">-- choose flight leg --</option>
+          ${flightOpts}
+        </select>
+      </div>
+    </div>
+
+    <div class="row">
+      <label style="flex:1"><input type="checkbox" class="carBox"> Vehicle day (${money(vehPrice)})</label>
+      <label style="flex:1"><input type="checkbox" class="accBox"> Accommodation (${money(accPrice)}/person)</label>
+      <label style="flex:1"><input type="checkbox" class="insideBox"> Inside park accommodation</label>
+      <label style="flex:1"><input type="checkbox" class="campBox"> Camping (${money(campPrice)}/person)</label>
+    </div>
+
+    <div class="row">
+      <label style="flex:1"><input type="checkbox" class="vehEntryBox"> Park vehicle entry (if defined)</label>
+      <label style="flex:1"><input type="checkbox" class="matBox"> Materuni (${money(matPrice)}/person)</label>
+    </div>
+
+    <div class="row">
+      <div><label>Other description</label><input type="text" class="otherDesc" placeholder="e.g., Tips, special permit"></div>
+      <div><label>Other amount</label><input type="number" class="otherVal" placeholder="0"></div>
+    </div>
+  `;
+
+  const flightCheck=block.querySelector('.flightCheck');
+  const flightSelect=block.querySelector('.flightSelect');
+  flightCheck.addEventListener('change',()=>{ flightSelect.disabled=!flightCheck.checked; if(!flightCheck.checked) flightSelect.value=''; });
+
+  const parkSelect=block.querySelector('.parkSelect');
+  const vehEntryBox=block.querySelector('.vehEntryBox');
+  function updateVehEntry(){
+    const parkCfg=CONFIG.parks[parkSelect.value];
+    const hasVeh=Array.isArray(parkCfg?.vehicleEntries) && parkCfg.vehicleEntries.length>0;
+    vehEntryBox.disabled=!hasVeh; if(!hasVeh) vehEntryBox.checked=false;
+  }
+  parkSelect.addEventListener('change',updateVehEntry);
+  updateVehEntry();
+
+  return block;
+}
+
+renderDays();
+
+/* Collect and calculate */
+function collect(){
+  const blocks=[...daysContainer.querySelectorAll('.day')];
+  return {
+    adults: parseInt(adultsEl.value)||0,
+    children: parseInt(childrenEl.value)||0,
+    daysData: blocks.map(b=>({
+      park: b.querySelector('.parkSelect').value,
+      sleep: b.querySelector('.sleepBox').checked,
+      includeFlight: b.querySelector('.flightCheck').checked,
+      flightLeg: b.querySelector('.flightSelect').value,
+      car: b.querySelector('.carBox').checked,
+      accommodation: b.querySelector('.accBox').checked,
+      inside: b.querySelector('.insideBox').checked,
+      camping: b.querySelector('.campBox').checked,
+      vehicleEntry: b.querySelector('.vehEntryBox').checked,
+      materuni: b.querySelector('.matBox').checked,
+      other_desc: b.querySelector('.otherDesc').value.trim(),
+      other_val: parseFloat(b.querySelector('.otherVal').value||'0')||0
+    })),
+    profitOverride: (profitOverrideEl.value||'').trim()
+  };
+}
+
+function calculate(){
+  const d=collect();
+  const people=d.adults+d.children;
+  const r=CONFIG.rules, x=CONFIG.extras, f=CONFIG.flights, parks=CONFIG.parks;
+
+  const profitAuto=(()=>{
+    const b12=r.profit.baseForOneOrTwo, f3=r.profit.forThree, plus=r.profit.plusPerExtra;
+    if(people<=2) return b12; if(people===3) return f3; return f3+plus*(people-3);
+  })();
+  const profit=d.profitOverride!=='' ? Math.max(0,parseFloat(d.profitOverride)||0) : profitAuto;
+
+  const totals={park_fees:0,transit:0,concession:0,accommodation:0,vehicle:0,vehicle_entries:0,flights:0,camping:0,materuni:0,other:0,profit};
+  const lines=[]; let prev=null;
+
+  d.daysData.forEach((day,idx)=>{
+    let sum=0; const det=[];
+    const pk=day.park, pc=parks[pk];
+
+    if(day.includeFlight && day.flightLeg && f[day.flightLeg]){
+      const c=f[day.flightLeg]*people; sum+=c; totals.flights+=c; det.push(`Flight ${day.flightLeg} × ${people} = ${money(c)}`);
+    }
+
+    if(pc?.entry){
+      const e=pc.entry; const c=(e.adult||0)*d.adults+(e.child||0)*d.children; sum+=c; totals.park_fees+=c;
+      det.push(`Park fee (${pk}) = ${money(c)} (${e.adult||0}/adult, ${e.child||0}/child)`);
+    }
+
+    if(prev!==null && r.chargeTransitOnParkChange && pk!==prev && x.transitPerPerson){
+      const t=x.transitPerPerson; const c=(t.adult||0)*d.adults+(t.child||0)*d.children; sum+=c; totals.transit+=c; det.push(`Transit (${prev} → ${pk}) = ${money(c)}`);
+    }
+
+    if(day.car && r.chargeVehiclePerDay){
+      const v=x.perVehicle.VehicleDay||0; sum+=v; totals.vehicle+=v; det.push(`Vehicle day = ${money(v)}`);
+    }
+
+    if(day.vehicleEntry && Array.isArray(pc?.vehicleEntries)){
+      pc.vehicleEntries.forEach(ve=>{ const amount=ve.amountPerVehicle||0; sum+=amount; totals.vehicle_entries+=amount; det.push(`${ve.label} = ${money(amount)}`); });
+    }
+
+    const conc=x.concessionPerPerson||{adult:71,child:24};
+    const doConc=(r.concessionAppliesIf.sleepInPark && day.sleep) || (r.concessionAppliesIf.accommodationInsidePark && day.accommodation && day.inside);
+    if(doConc){ const c=(conc.adult||0)*d.adults+(conc.child||0)*d.children; sum+=c; totals.concession+=c; det.push(`Concession (inside/sleep) = ${money(c)}`); }
+
+    if(day.accommodation){ const a=x.perPerson.Accommodation||0; const c=a*people; sum+=c; totals.accommodation+=c; det.push(`Accommodation (${people} × ${money(a)}) = ${money(c)}`); }
+    if(day.camping){ const camp=x.perPerson.Camping||0; const c=camp*people; sum+=c; totals.camping+=c; det.push(`Camping (${people} × ${money(camp)}) = ${money(c)}`); }
+    if(day.materuni){ const m=x.perPerson.Materuni||0; const c=m*people; sum+=c; totals.materuni+=c; det.push(`Materuni (${people} × ${money(m)}) = ${money(c)}`); }
+    if(day.other_val>0){ sum+=day.other_val; totals.other+=day.other_val; det.push(`${day.other_desc?escapeHtml(day.other_desc):'Other'} = ${money(day.other_val)}`); }
+
+    lines.push({day:idx+1,park:pk,amount:sum,details:det});
+    prev=pk;
+  });
+
+  renderReceipt(lines,totals,people);
+}
+
+function renderReceipt(lines,totals,people){
+  const grand=Object.values(totals).reduce((a,b)=>a+b,0);
+  const perPerson = people>0 ? grand/people : 0;
+  receiptEmptyEl.style.display='none';
+  const parts=[];
+  lines.forEach(l=>{
+    parts.push(`
+      <div class="kv"><div><strong>Day ${l.day}</strong> — ${escapeHtml(l.park)}</div><div>${money(l.amount)}</div></div>
+      ${l.details.length?`<div class="note" style="margin:6px 0 10px">${l.details.map(x=>'• '+escapeHtml(x)).join('<br>')}</div>`:''}
+    `);
+  });
+  parts.push('<hr class="sep">');
+  parts.push(`<div class="kv"><div>People</div><div>${people}</div></div>`);
+  parts.push(`<div class="kv"><div>Park fees</div><div>${money(totals.park_fees)}</div></div>`);
+  parts.push(`<div class="kv"><div>Transit</div><div>${money(totals.transit)}</div></div>`);
+  parts.push(`<div class="kv"><div>Concession</div><div>${money(totals.concession)}</div></div>`);
+  parts.push(`<div class="kv"><div>Accommodation</div><div>${money(totals.accommodation)}</div></div>`);
+  parts.push(`<div class="kv"><div>Vehicle (days)</div><div>${money(totals.vehicle)}</div></div>`);
+  parts.push(`<div class="kv"><div>Vehicle entries</div><div>${money(totals.vehicle_entries)}</div></div>`);
+  parts.push(`<div class="kv"><div>Camping</div><div>${money(totals.camping)}</div></div>`);
+  parts.push(`<div class="kv"><div>Materuni</div><div>${money(totals.materuni)}</div></div>`);
+  parts.push(`<div class="kv"><div>Flights</div><div>${money(totals.flights)}</div></div>`);
+  parts.push(`<div class="kv"><div>Other</div><div>${money(totals.other)}</div></div>`);
+  parts.push(`<div class="kv"><div>Profit</div><div>${money(totals.profit)}</div></div>`);
+  parts.push('<div class="summaryBig">');
+  parts.push(`<div class="line"><div>Total</div><div>${money(grand)}</div></div>`);
+  parts.push(`<div class="line"><div>Total per person</div><div>${money(perPerson)}</div></div>`);
+  parts.push('</div>');
+  receiptEl.innerHTML=parts.join('');
+}
+
+/* Save / Load */
+const STORAGE_ITN='tz_safari_itineraries_v1';
+function loadItineraries(){ try{ return JSON.parse(localStorage.getItem(STORAGE_ITN)||'{}'); }catch(e){ return {}; } }
+function saveItineraries(obj){ localStorage.setItem(STORAGE_ITN,JSON.stringify(obj)); }
+function renderSavedList(){ const saved=loadItineraries(); const sel=document.getElementById('savedList'); sel.innerHTML=''; Object.keys(saved).forEach(k=>{ const o=document.createElement('option'); o.value=k; o.textContent=k; sel.appendChild(o); }); }
+renderSavedList();
+
+document.getElementById('saveBtn').onclick=()=>document.getElementById('saveName').focus();
+document.getElementById('loadBtn').onclick=()=>document.getElementById('savedList').focus();
+document.getElementById('doSave').onclick=()=>{
+  const name=(document.getElementById('saveName').value||'').trim();
+  if(!name){ alert('Name it first'); return; }
+  const saved=loadItineraries(); if(saved[name] && !confirm(`Overwrite "${name}"?`)) return;
+  saved[name]=collect(); saved[name].days=(saved[name].daysData||[]).length;
+  saveItineraries(saved); renderSavedList(); document.getElementById('saveName').value=''; alert(`Saved "${name}"`);
+};
+document.getElementById('doLoad').onclick=()=>{
+  const sel=document.getElementById('savedList').value; if(!sel){ alert('Select one'); return; }
+  const state=loadItineraries()[sel]; if(state) applyState(state);
+};
+document.getElementById('doDelete').onclick=()=>{
+  const sel=document.getElementById('savedList').value; if(!sel){ alert('Select one'); return; }
+  const s=loadItineraries(); delete s[sel]; saveItineraries(s); renderSavedList();
+};
+document.getElementById('doClear').onclick=()=>{
+  if(confirm('Clear all saved itineraries?')){ localStorage.removeItem(STORAGE_ITN); renderSavedList(); }
+};
+
+function applyState(state){
+  adultsEl.value=state.adults||0; childrenEl.value=state.children||0; daysEl.value=(state.daysData||[]).length||1; profitOverrideEl.value=state.profitOverride||'';
+  renderDays();
+  const blocks=daysContainer.querySelectorAll('.day');
+  (state.daysData||[]).forEach((d,idx)=>{
+    const b=blocks[idx]; if(!b) return;
+    b.querySelector('.parkSelect').value=d.park||Object.keys(CONFIG.parks)[0]||'';
+    b.querySelector('.sleepBox').checked=!!d.sleep;
+    b.querySelector('.flightCheck').checked=!!d.includeFlight; b.querySelector('.flightCheck').dispatchEvent(new Event('change'));
+    b.querySelector('.flightSelect').value=d.flightLeg||'';
+    b.querySelector('.carBox').checked=!!d.car;
+    b.querySelector('.accBox').checked=!!d.accommodation;
+    b.querySelector('.insideBox').checked=!!d.inside;
+    b.querySelector('.campBox').checked=!!d.camping;
+    b.querySelector('.vehEntryBox').checked=!!d.vehicleEntry;
+    b.querySelector('.matBox').checked=!!d.materuni;
+    b.querySelector('.otherDesc').value=d.other_desc||'';
+    b.querySelector('.otherVal').value=d.other_val||0;
+    b.querySelector('.parkSelect').dispatchEvent(new Event('change'));
+  });
+}
+</script>
+</body>
+</html>
