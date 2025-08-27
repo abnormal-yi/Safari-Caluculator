@@ -1,33 +1,52 @@
+
 <!doctype html>
 <html lang="en">
 <head>
 <meta charset="utf-8">
-<meta name="viewport" content="width=device-width,initial-scale=1">
+<meta name="viewport" content="width=device-width,initial-scale=1,viewport-fit=cover">
+<meta name="theme-color" content="#0f172a" id="metaThemeColor">
 <title>Tanzania Safari Calculator • TZ Safari</title>
 <style>
 :root{
   --bg:#0f172a;--bg2:#111827;--ink:#e5e7eb;--muted:#9ca3af;--line:#1f2937;--card:#0b1220;
-  --accent:#22d3ee;--accent-ink:#00151a;--chip:#0c2530;--chip-b:#1d3b46
+  --accent:#22d3ee;--accent-ink:#00151a;--chip:#0c2530;--chip-b:#1d3b46;
+  --shadow:0 6px 24px rgba(0,0,0,.25), inset 0 1px 0 rgba(255,255,255,.06)
 }
 *{box-sizing:border-box}
+html,body{height:100%}
 body{margin:0;background:linear-gradient(180deg,var(--bg),var(--bg2));color:var(--ink);font-family:Inter,system-ui,Segoe UI,Roboto,Arial}
-.header{max-width:1200px;margin:20px auto 0;padding:0 16px}
-.brand{display:flex;align-items:center;gap:12px}
+.header{
+  position:sticky;top:0;z-index:10;
+  backdrop-filter:saturate(160%) blur(6px);
+  background:linear-gradient(180deg,rgba(15,23,42,.85),rgba(17,24,39,.75));
+  border-bottom:1px solid rgba(255,255,255,.06);
+}
+.header-inner{max-width:1200px;margin:0 auto;padding:10px 16px;display:flex;align-items:center;gap:12px}
 .logo{
   width:40px;height:40px;border-radius:12px;display:flex;align-items:center;justify-content:center;
   background:conic-gradient(from 220deg,#22d3ee,#60a5fa,#a78bfa,#22d3ee);
   color:#002228;font-weight:900;font-family:ui-monospace,Consolas,monospace;letter-spacing:.5px;
-  box-shadow:0 10px 40px rgba(34,211,238,.25)
+  box-shadow:0 10px 40px rgba(34,211,238,.25);flex:0 0 40px
 }
-.hgroup h1{font-size:22px;margin:0}
-.hgroup .sub{color:var(--muted);font-size:13px;margin-top:4px}
-.wrap{max-width:1200px;margin:12px auto;padding:0 16px}
+.hgroup{min-width:0}
+.hgroup h1{font-size:20px;margin:0;white-space:nowrap;overflow:hidden;text-overflow:ellipsis}
+.hgroup .sub{color:var(--muted);font-size:12px;margin-top:2px;white-space:nowrap;overflow:hidden;text-overflow:ellipsis}
+
+.icon-btn{
+  margin-left:auto;display:inline-flex;align-items:center;justify-content:center;gap:8px;
+  width:40px;height:40px;border-radius:999px;border:1px solid #253041;background:#0b1324;color:#e5e7eb;
+  box-shadow:var(--shadow);cursor:pointer;transition:transform .05s,filter .15s;
+}
+.icon-btn:hover{filter:brightness(1.05)} .icon-btn:active{transform:translateY(1px)}
+.icon{width:20px;height:20px;display:block}
+
+.wrap{max-width:1200px;margin:14px auto;padding:0 16px}
 .grid{display:grid;grid-template-columns:1fr 420px;gap:16px}
-.card{background:linear-gradient(180deg,rgba(255,255,255,.02),rgba(255,255,255,.01));border:1px solid var(--line);border-radius:14px;box-shadow:0 6px 24px rgba(0,0,0,.25), inset 0 1px 0 rgba(255,255,255,.06)}
+.card{background:linear-gradient(180deg,rgba(255,255,255,.02),rgba(255,255,255,.01));border:1px solid var(--line);border-radius:14px;box-shadow:var(--shadow)}
 .in{padding:16px}
 h3{margin:0 0 12px;font-size:16px}
-.row{display:flex;gap:12px;margin-bottom:12px}
-.row>*{flex:1}
+.row{display:flex;gap:12px;margin-bottom:12px;flex-wrap:wrap}
+.row>*{flex:1 1 200px}
 label{display:block;font-size:12px;color:var(--muted);margin:0 0 6px}
 input[type=number],input[type=text],select{
   width:100%;padding:12px;border-radius:10px;border:1px solid var(--line);
@@ -37,7 +56,7 @@ input:focus,select:focus{border-color:#22d3ee;box-shadow:0 0 0 4px rgba(34,211,2
 .btn{
   display:inline-flex;align-items:center;gap:8px;padding:10px 14px;border-radius:999px;border:1px solid #1f3a4d;
   background:linear-gradient(180deg,#0d2a38,#0b2431);color:#d1f5ff;font-weight:700;cursor:pointer;
-  transition:filter .15s,transform .05s;box-shadow:0 6px 18px rgba(3,105,161,.25), inset 0 1px 0 rgba(255,255,255,.06)
+  transition:filter .15s,transform .05s;box-shadow:var(--shadow)
 }
 .btn:hover{filter:brightness(1.06)} .btn:active{transform:translateY(1px)}
 .btn-primary{border-color:#0aa5b8;background:linear-gradient(180deg,#0bc5d9,#0aa5b8);color:#002228}
@@ -55,14 +74,15 @@ hr.sep{height:1px;border:0;background:#212b3c;margin:14px 0}
 .summaryBig{display:flex;flex-direction:column;gap:8px;margin-top:8px}
 .summaryBig .line{display:flex;justify-content:space-between;font-size:18px;font-weight:800}
 
-/* Light theme (improved readability: larger fonts, higher contrast, clearer borders) */
+/* Light theme (mobile readability: larger sizes, higher contrast) */
 :root[data-theme="light"]{
   --bg:#f7f9fc; --bg2:#ffffff; --ink:#0b1324; --muted:#475569; --line:#d9e1ea; --card:#ffffff; --accent:#0ea5a0; --accent-ink:#003b38;
   --chip:#eef6f6; --chip-b:#cfe8e6;
 }
 :root[data-theme="light"] body{background:linear-gradient(180deg,var(--bg),var(--bg2));color:var(--ink)}
-:root[data-theme="light"] .hgroup h1{font-size:24px}
-:root[data-theme="light"] .hgroup .sub{font-size:14px;color:#516070}
+:root[data-theme="light"] .header{background:linear-gradient(180deg,rgba(255,255,255,.85),rgba(255,255,255,.7));border-bottom:1px solid #e8eef5}
+:root[data-theme="light"] .hgroup h1{font-size:22px}
+:root[data-theme="light"] .hgroup .sub{font-size:13px;color:#516070}
 :root[data-theme="light"] .card{background:#ffffff;border:1px solid var(--line);box-shadow:0 10px 24px rgba(15,23,42,.06)}
 :root[data-theme="light"] input[type=number], :root[data-theme="light"] input[type=text], :root[data-theme="light"] select{
   background:#ffffff;border:1px solid var(--line);color:var(--ink)
@@ -70,18 +90,31 @@ hr.sep{height:1px;border:0;background:#212b3c;margin:14px 0}
 :root[data-theme="light"] .btn-ghost{background:#f1f5f9;border-color:#d9e1ea;color:#0b1324}
 :root[data-theme="light"] .day{background:#ffffff;border-color:#e6edf3}
 :root[data-theme="light"] .kv{border-bottom:1px dashed #e4ebf2}
+
+/* Mobile tweaks */
 @media(max-width:980px){.grid{grid-template-columns:1fr}}
+@media(max-width:640px){
+  .hgroup h1{font-size:18px}
+  .hgroup .sub{display:none}
+  .icon-btn{width:42px;height:42px}
+  .in{padding:14px}
+  input,select,.btn{font-size:16px}
+  .day{padding:12px}
+}
 </style>
 </head>
 <body>
 <div class="header">
-  <div class="brand">
-    <div class="logo">TZ</div>
+  <div class="header-inner">
+    <div class="logo" aria-hidden="true">TZ</div>
     <div class="hgroup">
       <h1>Tanzania Safari Calculator</h1>
-      <div class="sub">TZ Safari • Plan days, flights, vehicles, concessions, extras — with per-person totals</div>
+      <div class="sub">Plan days, flights, vehicles, concessions, extras — with per-person totals</div>
     </div>
-    <button id="themeToggle" class="btn btn-ghost" type="button" style="margin-left:auto">Toggle theme</button>
+    <button id="themeToggle" class="icon-btn" aria-label="Toggle theme" title="Toggle theme">
+      <svg id="iconMoon" class="icon" viewBox="0 0 24 24" fill="currentColor" aria-hidden="true"><path d="M21 12.79A9 9 0 1 1 11.21 3a7 7 0 1 0 9.79 9.79z"/></svg>
+      <svg id="iconSun" class="icon" viewBox="0 0 24 24" fill="currentColor" aria-hidden="true" style="display:none"><path d="M6.76 4.84l-1.8-1.79-1.41 1.41 1.79 1.8 1.42-1.42zm10.48 0l1.79-1.8 1.41 1.41-1.8 1.79-1.4-1.4zM12 4V1h-0v3h0zm0 19v-3h0v3h0zm8-8h3v0h-3v0zm-19 0h3v0H1v0zm3.64 6.36l1.8-1.79-1.41-1.41-1.79 1.8 1.4 1.4zM19.36 18.36l-1.79-1.8-1.41 1.41 1.8 1.79 1.4-1.4zM12 6a6 6 0 100 12 6 6 0 000-12z"/></svg>
+    </button>
   </div>
 </div>
 
@@ -91,20 +124,20 @@ hr.sep{height:1px;border:0;background:#212b3c;margin:14px 0}
       <div class="in">
         <h3>Group & Trip</h3>
         <div class="row">
-          <div><label>Adults</label><input id="adults" type="number" min="0" value="2"></div>
-          <div><label>Children</label><input id="children" type="number" min="0" value="0"></div>
+          <div><label>Adults</label><input id="adults" type="number" min="0" value="2" inputmode="numeric"></div>
+          <div><label>Children</label><input id="children" type="number" min="0" value="0" inputmode="numeric"></div>
           <div>
             <label>Days</label>
             <div class="row" style="gap:8px">
               <button id="decDays" class="btn-ghost btn" type="button" style="flex:0 0 64px">−</button>
-              <input id="days" type="number" min="1" max="60" value="5" style="text-align:center">
+              <input id="days" type="number" min="1" max="60" value="5" style="text-align:center" inputmode="numeric">
               <button id="incDays" class="btn-ghost btn" type="button" style="flex:0 0 64px">+</button>
             </div>
           </div>
         </div>
 
         <div class="row">
-          <div><label>Profit (override)</label><input id="profitOverride" type="number" min="0" step="1" placeholder="Auto"></div>
+          <div><label>Profit (override)</label><input id="profitOverride" type="number" min="0" step="1" placeholder="Auto" inputmode="numeric"></div>
           <div><label>Auto profit rule</label><div class="note">1 pax $1000, 3 pax $1200, then +$200 per extra pax</div></div>
         </div>
 
@@ -120,7 +153,7 @@ hr.sep{height:1px;border:0;background:#212b3c;margin:14px 0}
 
         <div id="daysContainer"></div>
 
-        <div style="display:flex;gap:8px;align-items:center;margin-top:8px">
+        <div style="display:flex;gap:8px;align-items:center;margin-top:8px;flex-wrap:wrap">
           <button id="calcBtn" class="btn btn-primary" type="button">Calculate Receipt</button>
           <button id="resetBtn" class="btn btn-ghost" type="button">Reset</button>
           <div style="margin-left:auto;display:flex;gap:8px">
@@ -144,8 +177,8 @@ hr.sep{height:1px;border:0;background:#212b3c;margin:14px 0}
           <input id="saveName" type="text" placeholder="Name itinerary...">
           <button id="doSave" class="btn" type="button">Save</button>
         </div>
-        <select id="savedList" class="list" size="6"></select>
-        <div style="display:flex;gap:8px;margin-top:8px">
+        <select id="savedList" class="list" size="6" aria-label="Saved itineraries"></select>
+        <div style="display:flex;gap:8px;margin-top:8px;flex-wrap:wrap">
           <button id="doLoad" class="btn" type="button">Load selected</button>
           <button id="doDelete" class="btn btn-danger" type="button">Delete</button>
           <button id="doClear" class="btn btn-ghost" type="button">Clear all</button>
@@ -160,15 +193,28 @@ if(typeof String.prototype.replaceAll!=='function'){ String.prototype.replaceAll
 function money(n){ return '$' + Number(n).toFixed(2); }
 function escapeHtml(s){ return String(s).replaceAll('&','&amp;').replaceAll('<','&lt;').replaceAll('>','&gt;').replaceAll('"','&quot;'); }
 
-/* Theme toggle */
+/* Theme toggle with icon swap + theme-color meta */
 const THEME_KEY='tz_safari_theme';
-const themeToggleBtn=document.getElementById('themeToggle');
-function applyTheme(theme){ document.documentElement.setAttribute('data-theme',theme); themeToggleBtn.textContent = theme==='dark'?'Light mode':'Dark mode'; }
-function initTheme(){ let t=localStorage.getItem(THEME_KEY); if(!t){ t=window.matchMedia&&window.matchMedia('(prefers-color-scheme: light)').matches?'light':'dark'; } applyTheme(t); }
-themeToggleBtn.addEventListener('click',()=>{ const cur=document.documentElement.getAttribute('data-theme')||'dark'; const next=cur==='dark'?'light':'dark'; localStorage.setItem(THEME_KEY,next); applyTheme(next); });
+const btn=document.getElementById('themeToggle');
+const iconMoon=document.getElementById('iconMoon');
+const iconSun=document.getElementById('iconSun');
+const metaTheme=document.getElementById('metaThemeColor');
+function applyTheme(theme){
+  document.documentElement.setAttribute('data-theme',theme);
+  const isDark = theme==='dark';
+  iconMoon.style.display = isDark ? 'block' : 'none';
+  iconSun.style.display = isDark ? 'none' : 'block';
+  metaTheme.setAttribute('content', isDark ? '#0f172a' : '#f7f9fc');
+}
+function initTheme(){
+  let t=localStorage.getItem(THEME_KEY);
+  if(!t){ t=window.matchMedia&&window.matchMedia('(prefers-color-scheme: light)').matches?'light':'dark'; }
+  applyTheme(t);
+}
+btn.addEventListener('click',()=>{ const cur=document.documentElement.getAttribute('data-theme')||'dark'; const next=cur==='dark'?'light':'dark'; localStorage.setItem(THEME_KEY,next); applyTheme(next); });
 initTheme();
 
-/* Baked-in config for Tanzania (can be edited in code) */
+/* Tanzania config */
 const CONFIG = {
   rules: {
     profit: { baseForOneOrTwo: 1000, forThree: 1200, plusPerExtra: 200 },
@@ -241,11 +287,11 @@ function createDayBlock(idx){
     <div class="row">
       <div>
         <label>Park</label>
-        <select class="parkSelect">${parkOpts}</select>
+        <select class="parkSelect" aria-label="Park for day ${idx+1}">${parkOpts}</select>
       </div>
       <div style="align-self:flex-end">
         <label style="display:flex;align-items:center;gap:8px">
-          <input type="checkbox" class="sleepBox"> Sleep in park
+          <input type="checkbox" class="sleepBox" aria-label="Sleep in park for day ${idx+1}"> Sleep in park
         </label>
       </div>
     </div>
@@ -253,12 +299,12 @@ function createDayBlock(idx){
     <div class="row">
       <div style="flex:1.2">
         <label style="display:flex;align-items:center;gap:8px">
-          <input type="checkbox" class="flightCheck"> Include flight
+          <input type="checkbox" class="flightCheck" aria-label="Include flight for day ${idx+1}"> Include flight
         </label>
       </div>
       <div style="flex:2.8">
         <label>Flight leg</label>
-        <select class="flightSelect" disabled>
+        <select class="flightSelect" disabled aria-label="Flight leg for day ${idx+1}">
           <option value="">-- choose flight leg --</option>
           ${flightOpts}
         </select>
@@ -266,20 +312,20 @@ function createDayBlock(idx){
     </div>
 
     <div class="row">
-      <label style="flex:1"><input type="checkbox" class="carBox"> Vehicle day (${money(vehPrice)})</label>
-      <label style="flex:1"><input type="checkbox" class="accBox"> Accommodation (${money(accPrice)}/person)</label>
-      <label style="flex:1"><input type="checkbox" class="insideBox"> Inside park accommodation</label>
-      <label style="flex:1"><input type="checkbox" class="campBox"> Camping (${money(campPrice)}/person)</label>
+      <label style="flex:1"><input type="checkbox" class="carBox" aria-label="Vehicle day ${idx+1}"> Vehicle day (${money(vehPrice)})</label>
+      <label style="flex:1"><input type="checkbox" class="accBox" aria-label="Accommodation ${idx+1}"> Accommodation (${money(accPrice)}/person)</label>
+      <label style="flex:1"><input type="checkbox" class="insideBox" aria-label="Inside park accommodation ${idx+1}"> Inside park accommodation</label>
+      <label style="flex:1"><input type="checkbox" class="campBox" aria-label="Camping ${idx+1}"> Camping (${money(campPrice)}/person)</label>
     </div>
 
     <div class="row">
-      <label style="flex:1"><input type="checkbox" class="vehEntryBox"> Park vehicle entry (if defined)</label>
-      <label style="flex:1"><input type="checkbox" class="matBox"> Materuni (${money(matPrice)}/person)</label>
+      <label style="flex:1"><input type="checkbox" class="vehEntryBox" aria-label="Park vehicle entry ${idx+1}"> Park vehicle entry (if defined)</label>
+      <label style="flex:1"><input type="checkbox" class="matBox" aria-label="Materuni ${idx+1}"> Materuni (${money(matPrice)}/person)</label>
     </div>
 
     <div class="row">
-      <div><label>Other description</label><input type="text" class="otherDesc" placeholder="e.g., Tips, special permit"></div>
-      <div><label>Other amount</label><input type="number" class="otherVal" placeholder="0"></div>
+      <div><label>Other description</label><input type="text" class="otherDesc" placeholder="e.g., Tips, special permit" aria-label="Other description ${idx+1}"></div>
+      <div><label>Other amount</label><input type="number" class="otherVal" placeholder="0" inputmode="decimal" aria-label="Other amount ${idx+1}"></div>
     </div>
   `;
 
@@ -322,7 +368,7 @@ function collect(){
       other_desc: b.querySelector('.otherDesc').value.trim(),
       other_val: parseFloat(b.querySelector('.otherVal').value||'0')||0
     })),
-    profitOverride: (profitOverrideEl.value||'').trim()
+    profitOverride: (document.getElementById('profitOverride').value||'').trim()
   };
 }
 
@@ -354,7 +400,8 @@ function calculate(){
     }
 
     if(prev!==null && r.chargeTransitOnParkChange && pk!==prev && x.transitPerPerson){
-      const t=x.transitPerPerson; const c=(t.adult||0)*d.adults+(t.child||0)*d.children; sum+=c; totals.transit+=c; det.push(`Transit (${prev} → ${pk}) = ${money(c)}`);
+      const t=x.transitPerPerson; const c=(t.adult||0)*d.adults+(t.child||0)*d.children; sum+=c; totals.transit+=c;
+      det.push(`Transit (${prev} → ${pk}) = ${money(c)}`);
     }
 
     if(day.car && r.chargeVehiclePerDay){
@@ -463,4 +510,3 @@ function applyState(state){
 }
 </script>
 </body>
-</html>
