@@ -1,10 +1,12 @@
+
+
 <!doctype html>
 <html lang="en">
 <head>
 <meta charset="utf-8">
 <meta name="viewport" content="width=device-width,initial-scale=1,viewport-fit=cover">
 <meta name="theme-color" content="#0f172a" id="metaThemeColor">
-<title>Tour Operator • TZ Safari</title>
+<title>Tour Operator Calculator • TZ Safari</title>
 <style>
 :root{
   --bg:#0f172a;--bg2:#111827;--ink:#e5e7eb;--muted:#9ca3af;--line:#1f2937;--card:#0b1220;
@@ -13,7 +15,7 @@
 }
 *{box-sizing:border-box}
 html,body{height:100%}
-body{margin:0;background:linear-gradient(180deg,var(--bg),var(--bg2));color:var(--ink);font-family:Inter,system-ui,Segoe UI,Roboto,Arial}
+body{margin:0;background:linear-gradient(180deg,var(--bg),var(--bg2));color:#e5e7eb;font-family:Inter,system-ui,Segoe UI,Roboto,Arial}
 .header{
   position:sticky;top:0;z-index:10;
   backdrop-filter:saturate(160%) blur(6px);
@@ -44,7 +46,7 @@ body{margin:0;background:linear-gradient(180deg,var(--bg),var(--bg2));color:var(
 h3{margin:0 0 12px;font-size:16px}
 .row{display:flex;gap:12px;margin-bottom:12px;flex-wrap:wrap}
 .row>*{flex:1 1 200px}
-label{display:block;font-size:12px;color:var(--muted);margin:0 0 6px}
+label{display:block;font-size:12px;color:#9ca3af;margin:0 0 6px}
 input[type=number],input[type=text],select{
   width:100%;padding:12px;border-radius:10px;border:1px solid var(--line);
   background:#0b1324;color:#e5e7eb;outline:0;transition:border-color .15s, box-shadow .15s
@@ -61,7 +63,7 @@ input:focus,select:focus{border-color:#22d3ee;box-shadow:0 0 0 4px rgba(34,211,2
 .btn-danger{border-color:#7f1d1d;background:linear-gradient(180deg,#7f1d1d,#4c1212);color:#fee2e2}
 .day{border:1px dashed #2a3446;border-radius:12px;padding:12px;margin-bottom:12px;background:linear-gradient(180deg,rgba(255,255,255,.02),rgba(255,255,255,.01))}
 .day-head{display:flex;align-items:center;justify-content:space-between;margin-bottom:8px}
-.chip{display:inline-block;padding:4px 8px;border-radius:999px;font-size:12px;border:1px solid var(--chip-b);background:#0c2530;color:#a7f3d0}
+.chip{display:inline-block;padding:4px 8px;border-radius:999px;font-size:12px;border:1px solid #1d3b46;background:#0c2530;color:#a7f3d0}
 .kv{display:flex;justify-content:space-between;gap:12px;padding:8px 0;border-bottom:1px dashed #273244}
 .kv:last-child{border-bottom:0}
 .total{font-size:18px;font-weight:800}
@@ -98,8 +100,8 @@ hr.sep{height:1px;border:0;background:#212b3c;margin:14px 0}
   <div class="header-inner">
     <div class="logo" aria-hidden="true">TZ</div>
     <div class="hgroup">
-      <h1>Tour Operator Safari Calculator</h1>
-      <div class="sub">Plan days, flights, vehicles, concessions, extras — with per‑person totals</div>
+      <h1>Tour Operator Calculator</h1>
+      <div class="sub">TZ Safari • Plan days, flights, vehicles, concessions, extras — with per‑person totals</div>
     </div>
     <button id="themeToggle" class="icon-btn" aria-label="Toggle theme" title="Toggle theme">
       <svg id="iconMoon" class="icon" viewBox="0 0 24 24" fill="currentColor" aria-hidden="true"><path d="M21 12.79A9 9 0 1 1 11.21 3a7 7 0 1 0 9.79 9.79z"/></svg>
@@ -204,7 +206,7 @@ function initTheme(){
 btn.addEventListener('click',()=>{ const cur=document.documentElement.getAttribute('data-theme')||'dark'; const next=cur==='dark'?'light':'dark'; localStorage.setItem(THEME_KEY,next); applyTheme(next); });
 initTheme();
 
-/* Tanzania config */
+/* Config (includes Hot Air Balloon) */
 const CONFIG = {
   rules: {
     profit: { baseForOneOrTwo: 1000, forThree: 1200, plusPerExtra: 200 },
@@ -225,7 +227,12 @@ const CONFIG = {
     "Zanzibar - Arusha (afternoon/evening)":75,"Arusha - Zanzibar":190,"Arusha - Dar":190,"Dar - Arusha":100,"Arusha - Sero":125,"Mafia - Zanzibar":200
   },
   extras: {
-    perPerson: { "Camping": 36, "Accommodation": 200, "Materuni": 150 },
+    perPerson: {
+      "Camping": 36,
+      "Accommodation": 200,
+      "Materuni": 150,
+      "HotAirBalloon": 600
+    },
     perVehicle: { "VehicleDay": 250 },
     transitPerPerson: { adult: 71, child: 24 },
     concessionPerPerson: { adult: 71, child: 24 }
@@ -255,7 +262,6 @@ function renderDays(){
   daysEl.value=count;
   daysContainer.innerHTML='';
   for(let i=0;i<count;i++) daysContainer.appendChild(createDayBlock(i));
-  // initial auto-detect transit across parks after blocks exist
   autoDetectAllTransit();
 }
 
@@ -269,6 +275,7 @@ function createDayBlock(idx){
   const campPrice=CONFIG.extras.perPerson.Camping||0;
   const vehPrice=CONFIG.extras.perVehicle.VehicleDay||0;
   const matPrice=CONFIG.extras.perPerson.Materuni||0;
+  const balloonPrice=CONFIG.extras.perPerson.HotAirBalloon||0;
 
   block.innerHTML=`
     <div class="day-head">
@@ -322,6 +329,7 @@ function createDayBlock(idx){
 
     <div class="row">
       <label style="flex:1"><input type="checkbox" class="matBox" aria-label="Materuni ${idx+1}"> Materuni (${money(matPrice)}/person)</label>
+      <label style="flex:1"><input type="checkbox" class="balloonBox" aria-label="Hot air balloon ${idx+1}"> Hot air balloon (${money(balloonPrice)}/person)</label>
       <label style="flex:1"><input type="checkbox" class="parkFeeBox" aria-label="Park entry fee ${idx+1}"> Park entry fee (manual)</label>
     </div>
 
@@ -348,22 +356,17 @@ function createDayBlock(idx){
   });
   updateVehEntry();
 
-  // Transit manual override tracking
   const transitBox=block.querySelector('.transitBox');
   transitBox.addEventListener('change',()=>{ transitBox.dataset.manual = '1'; });
-
-  // Auto button for transit (recompute from neighbors)
   const autoBtn=block.querySelector('.autoTransitBtn');
   autoBtn.addEventListener('click',()=>{ autoDetectTransitForIndex(idx, /*force*/true); });
-
-  // Park fee is manual; no auto behavior
 
   return block;
 }
 
 renderDays();
 
-/* Auto-detect transit: set if park changes from previous day; user can override */
+/* Auto-detect transit */
 function getDayPark(index){
   const b=daysContainer.querySelectorAll('.day')[index];
   if(!b) return null;
@@ -373,19 +376,19 @@ function autoDetectTransitForIndex(index, force){
   const blocks=daysContainer.querySelectorAll('.day');
   const b=blocks[index]; if(!b) return;
   const transitBox=b.querySelector('.transitBox');
-  if(!force && transitBox.dataset.manual==='1') return; // respect manual override
+  if(!force && transitBox.dataset.manual==='1') return;
   const prevPark = index>0 ? getDayPark(index-1) : null;
   const curPark = getDayPark(index);
   const shouldTransit = !!(prevPark && curPark && prevPark !== curPark);
   transitBox.checked = shouldTransit;
-  if(!force){ delete transitBox.dataset.manual; } // keep auto state
+  if(!force){ delete transitBox.dataset.manual; }
 }
 function autoDetectAllTransit(){
   const blocks=daysContainer.querySelectorAll('.day');
   blocks.forEach((_,i)=>autoDetectTransitForIndex(i,false));
 }
 
-/* Collect and calculate (park fee is manual; transit is checkbox) */
+/* Collect and calculate */
 function collect(){
   const blocks=[...daysContainer.querySelectorAll('.day')];
   return {
@@ -402,8 +405,9 @@ function collect(){
       camping: b.querySelector('.campBox').checked,
       vehicleEntry: b.querySelector('.vehEntryBox').checked,
       materuni: b.querySelector('.matBox').checked,
-      parkFee: b.querySelector('.parkFeeBox').checked,         // manual park fee
-      transit: b.querySelector('.transitBox').checked,         // auto-detected but user-togglable
+      hotAirBalloon: b.querySelector('.balloonBox').checked,
+      parkFee: b.querySelector('.parkFeeBox').checked,
+      transit: b.querySelector('.transitBox').checked,
       other_desc: b.querySelector('.otherDesc').value.trim(),
       other_val: parseFloat(b.querySelector('.otherVal').value||'0')||0
     })),
@@ -422,7 +426,7 @@ function calculate(){
   })();
   const profit=d.profitOverride!=='' ? Math.max(0,parseFloat(d.profitOverride)||0) : profitAuto;
 
-  const totals={park_fees:0,transit:0,concession:0,accommodation:0,vehicle:0,vehicle_entries:0,flights:0,camping:0,materuni:0,other:0,profit};
+  const totals={park_fees:0,transit:0,concession:0,accommodation:0,vehicle:0,vehicle_entries:0,flights:0,camping:0,materuni:0,balloon:0,other:0,profit};
   const lines=[];
 
   d.daysData.forEach((day,idx)=>{
@@ -433,16 +437,13 @@ function calculate(){
       const c=f[day.flightLeg]*people; sum+=c; totals.flights+=c; det.push(`Flight ${day.flightLeg} × ${people} = ${money(c)}`);
     }
 
-    // Park fee is manual
     if(day.parkFee && pc?.entry){
       const e=pc.entry; const c=(e.adult||0)*d.adults+(e.child||0)*d.children; sum+=c; totals.park_fees+=c;
       det.push(`Park fee (${pk}) = ${money(c)} (${e.adult||0}/adult, ${e.child||0}/child)`);
     }
 
-    // Transit from checkbox (auto suggested earlier)
     if(day.transit){
-      const t=x.transitPerPerson; const c=(t.adult||0)*d.adults+(t.child||0)*d.children; sum+=c; totals.transit+=c;
-      det.push(`Transit = ${money(c)}`);
+      const t=x.transitPerPerson; const c=(t.adult||0)*d.adults+(t.child||0)*d.children; sum+=c; totals.transit+=c; det.push(`Transit = ${money(c)}`);
     }
 
     if(day.car && r.chargeVehiclePerDay){
@@ -460,6 +461,8 @@ function calculate(){
     if(day.accommodation){ const a=x.perPerson.Accommodation||0; const c=a*people; sum+=c; totals.accommodation+=c; det.push(`Accommodation (${people} × ${money(a)}) = ${money(c)}`); }
     if(day.camping){ const camp=x.perPerson.Camping||0; const c=camp*people; sum+=c; totals.camping+=c; det.push(`Camping (${people} × ${money(camp)}) = ${money(c)}`); }
     if(day.materuni){ const m=x.perPerson.Materuni||0; const c=m*people; sum+=c; totals.materuni+=c; det.push(`Materuni (${people} × ${money(m)}) = ${money(c)}`); }
+    if(day.hotAirBalloon){ const b=x.perPerson.HotAirBalloon||0; const c=b*people; sum+=c; totals.balloon+=c; det.push(`Hot air balloon (${people} × ${money(b)}) = ${money(c)}`); }
+
     if(day.other_val>0){ sum+=day.other_val; totals.other+=day.other_val; det.push(`${day.other_desc?escapeHtml(day.other_desc):'Other'} = ${money(day.other_val)}`); }
 
     lines.push({day:idx+1,park:pk,amount:sum,details:det});
@@ -489,6 +492,7 @@ function renderReceipt(lines,totals,people){
   parts.push(`<div class="kv"><div>Vehicle entries</div><div>${money(totals.vehicle_entries)}</div></div>`);
   parts.push(`<div class="kv"><div>Camping</div><div>${money(totals.camping)}</div></div>`);
   parts.push(`<div class="kv"><div>Materuni</div><div>${money(totals.materuni)}</div></div>`);
+  parts.push(`<div class="kv"><div>Hot air balloon</div><div>${money(totals.balloon)}</div></div>`);
   parts.push(`<div class="kv"><div>Flights</div><div>${money(totals.flights)}</div></div>`);
   parts.push(`<div class="kv"><div>Other</div><div>${money(totals.other)}</div></div>`);
   parts.push(`<div class="kv"><div>Profit</div><div>${money(totals.profit)}</div></div>`);
@@ -543,6 +547,7 @@ function applyState(state){
     b.querySelector('.campBox').checked=!!d.camping;
     b.querySelector('.vehEntryBox').checked=!!d.vehicleEntry;
     b.querySelector('.matBox').checked=!!d.materuni;
+    b.querySelector('.balloonBox').checked=!!d.hotAirBalloon;
     b.querySelector('.parkFeeBox').checked=!!d.parkFee;
     const tBox=b.querySelector('.transitBox'); tBox.checked=!!d.transit; delete tBox.dataset.manual;
     b.querySelector('.parkSelect').dispatchEvent(new Event('change'));
